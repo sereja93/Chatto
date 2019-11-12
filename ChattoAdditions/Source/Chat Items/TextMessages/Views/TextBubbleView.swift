@@ -262,16 +262,17 @@ private final class TextBubbleLayoutModel {
         let preferredMaxLayoutWidth: CGFloat
     }
 
+    private var dateHeight: CGFloat = 20
     func calculateLayout() {
         let textHorizontalInset = self.layoutContext.textInsets.bma_horziontalInset
         let maxTextWidth = self.layoutContext.preferredMaxLayoutWidth - textHorizontalInset
         let textSize = self.textSizeThatFitsWidth(maxTextWidth)
-        let  messageSize = textSize.bma_outsetBy(dx: textHorizontalInset, dy: self.layoutContext.textInsets.bma_verticalInset)
+        let messageSize = textSize.bma_outsetBy(dx: textHorizontalInset, dy: self.layoutContext.textInsets.bma_verticalInset)
         var bubbleSize = messageSize
-        bubbleSize.height += 10
+        bubbleSize.height += CGFloat(dateHeight / 2)
         self.bubbleFrame = CGRect(origin: CGPoint.zero, size: bubbleSize)
         self.textFrame = CGRect(origin: CGPoint.zero, size: messageSize)
-        self.dateFrame = CGRect(origin: CGPoint(x: 0, y: messageSize.height - 20), size: CGSize(width: messageSize.width, height: 40))
+        self.dateFrame = CGRect(origin: CGPoint(x: 0, y: messageSize.height - dateHeight), size: CGSize(width: messageSize.width, height: dateHeight + 10))
         self.size = bubbleSize
     }
 
@@ -291,8 +292,13 @@ private final class TextBubbleLayoutModel {
             return layoutManager
         }()
 
-        let rect = layoutManager.usedRect(for: textContainer)
+        var rect = layoutManager.usedRect(for: textContainer)
+        if rect.width < 45 {
+            rect = CGRect(x: rect.minX, y: rect.minY, width: 45, height: rect.height)
+        }
         return rect.size.bma_round()
+        
+        
     }
 
     private func replicateUITextViewNSTextStorage() -> NSTextStorage {
