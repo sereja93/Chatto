@@ -83,6 +83,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
     private func commonInit() {
         self.addSubview(self.bubbleImageView)
         self.addSubview(self.textView)
+        self.addSubview(self.dateTextView)
     }
 
     private lazy var bubbleImageView: UIImageView = {
@@ -111,6 +112,25 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         textView.textContainer.lineFragmentPadding = 0
         textView.disableDragInteraction()
         textView.disableLargeContentViewer()
+        return textView
+    }()
+
+    private var dateTextView: UITextView = {
+        let textView = UITextView()
+        UIView.performWithoutAnimation({ () -> Void in // fixes iOS 8 blinking when cell appears
+            textView.backgroundColor = UIColor.clear
+        })
+        textView.isEditable = false
+        textView.isSelectable = true
+        textView.scrollsToTop = false
+        textView.isScrollEnabled = false
+        textView.bounces = false
+        textView.textAlignment = .right
+        textView.bouncesZoom = false
+        textView.showsHorizontalScrollIndicator = false
+        textView.showsVerticalScrollIndicator = false
+        textView.isExclusiveTouch = true
+        textView.textContainer.lineFragmentPadding = 0
         return textView
     }()
 
@@ -174,6 +194,9 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
 
         let textInsets = style.textInsets(viewModel: viewModel, isSelected: self.selected)
         if self.textView.textContainerInset != textInsets { self.textView.textContainerInset = textInsets }
+        if self.dateTextView.textContainerInset != textInsets { self.dateTextView.textContainerInset = textInsets }
+        
+        self.dateTextView.text = viewModel.date
     }
 
     private func bubbleImage() -> UIImage {
@@ -191,12 +214,14 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         self.textView.bma_rect = layout.textFrame
         self.bubbleImageView.bma_rect = layout.bubbleFrame
         self.borderImageView.bma_rect = self.bubbleImageView.bounds
+        self.dateTextView.bma_rect = layout.dateFrame
     }
 
     public var layoutCache: NSCache<AnyObject, AnyObject>!
     private func calculateTextBubbleLayout(preferredMaxLayoutWidth: CGFloat) -> TextBubbleLayoutModel {
         let layoutContext = TextBubbleLayoutModel.LayoutContext(
             text: self.textMessageViewModel.text,
+            date: self.textMessageViewModel.date,
             font: self.style.textFont(viewModel: self.textMessageViewModel, isSelected: self.selected),
             textInsets: self.style.textInsets(viewModel: self.textMessageViewModel, isSelected: self.selected),
             preferredMaxLayoutWidth: preferredMaxLayoutWidth
@@ -221,6 +246,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
 private final class TextBubbleLayoutModel {
     let layoutContext: LayoutContext
     var textFrame: CGRect = CGRect.zero
+    var dateFrame: CGRect = .zero
     var bubbleFrame: CGRect = CGRect.zero
     var size: CGSize = CGSize.zero
 
@@ -230,6 +256,7 @@ private final class TextBubbleLayoutModel {
 
     struct LayoutContext: Equatable, Hashable {
         let text: String
+        let date: String
         let font: UIFont
         let textInsets: UIEdgeInsets
         let preferredMaxLayoutWidth: CGFloat
@@ -239,9 +266,12 @@ private final class TextBubbleLayoutModel {
         let textHorizontalInset = self.layoutContext.textInsets.bma_horziontalInset
         let maxTextWidth = self.layoutContext.preferredMaxLayoutWidth - textHorizontalInset
         let textSize = self.textSizeThatFitsWidth(maxTextWidth)
-        let bubbleSize = textSize.bma_outsetBy(dx: textHorizontalInset, dy: self.layoutContext.textInsets.bma_verticalInset)
+        let  messageSize = textSize.bma_outsetBy(dx: textHorizontalInset, dy: self.layoutContext.textInsets.bma_verticalInset)
+        var bubbleSize = messageSize
+        bubbleSize.height += 10
         self.bubbleFrame = CGRect(origin: CGPoint.zero, size: bubbleSize)
-        self.textFrame = self.bubbleFrame
+        self.textFrame = CGRect(origin: CGPoint.zero, size: messageSize)
+        self.dateFrame = CGRect(origin: CGPoint(x: 0, y: messageSize.height - 20), size: CGSize(width: messageSize.width, height: 40))
         self.size = bubbleSize
     }
 
@@ -360,3 +390,4 @@ private extension String {
         return self.data(using: .utf8)?.base64EncodedString()
     }
 }
+
