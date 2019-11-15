@@ -174,11 +174,24 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
 
         var needsToUpdateText = false
 
+        if self.dateTextView.font != font {
+            self.dateTextView.font = font
+        }
+        
         if self.textView.font != font {
             self.textView.font = font
             needsToUpdateText = true
         }
-
+        
+        if self.dateTextView.textColor != textColor {
+            self.dateTextView.textColor = textColor
+            self.dateTextView.linkTextAttributes = [
+                NSAttributedString.Key.foregroundColor: textColor,
+                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+            ]
+        }
+        
+        
         if self.textView.textColor != textColor {
             self.textView.textColor = textColor
             self.textView.linkTextAttributes = [
@@ -187,7 +200,8 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             ]
             needsToUpdateText = true
         }
-
+        
+        
         if needsToUpdateText || self.textView.text != viewModel.text {
             self.textView.text = viewModel.text
         }
