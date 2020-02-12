@@ -64,8 +64,8 @@ open class ChatInputBar: ReusableXibView {
     @IBOutlet var constraintsForHiddenTextView: [NSLayoutConstraint]!
     @IBOutlet var constraintsForVisibleTextView: [NSLayoutConstraint]!
 
-    @IBOutlet var constraintsForVisibleSendButton: [NSLayoutConstraint]!
-    @IBOutlet var constraintsForHiddenSendButton: [NSLayoutConstraint]!
+//    @IBOutlet var constraintsForVisibleSendButton: [NSLayoutConstraint]!
+//    @IBOutlet var constraintsForHiddenSendButton: [NSLayoutConstraint]!
     @IBOutlet var tabBarContainerHeightConstraint: NSLayoutConstraint!
 
     class open func loadNib() -> ChatInputBar {
@@ -97,13 +97,13 @@ open class ChatInputBar: ReusableXibView {
             NSLayoutConstraint.deactivate(self.constraintsForVisibleTextView)
             NSLayoutConstraint.activate(self.constraintsForHiddenTextView)
         }
-        if self.showsSendButton {
-            NSLayoutConstraint.deactivate(self.constraintsForHiddenSendButton)
-            NSLayoutConstraint.activate(self.constraintsForVisibleSendButton)
-        } else {
-            NSLayoutConstraint.deactivate(self.constraintsForVisibleSendButton)
-            NSLayoutConstraint.activate(self.constraintsForHiddenSendButton)
-        }
+//        if self.showsSendButton {
+//            NSLayoutConstraint.deactivate(self.constraintsForHiddenSendButton)
+//            NSLayoutConstraint.activate(self.constraintsForVisibleSendButton)
+//        } else {
+//            NSLayoutConstraint.deactivate(self.constraintsForVisibleSendButton)
+//            NSLayoutConstraint.activate(self.constraintsForHiddenSendButton)
+//        }
         super.updateConstraints()
     }
 
@@ -234,17 +234,27 @@ extension ChatInputBar {
         self.textView.placeholderText = appearance.textInputAppearance.placeholderText
         self.textView.layer.borderColor = appearance.textInputAppearance.borderColor.cgColor
         self.textView.layer.borderWidth = appearance.textInputAppearance.borderWidth
+        self.textView.layer.backgroundColor = appearance.textInputAppearance.backgroundColor.cgColor
+        if let cornerRadius = appearance.textInputAppearance.cornerRadius {
+            self.textView.layer.masksToBounds = true
+            self.textView.layer.cornerRadius = cornerRadius
+        }
+        
         self.textView.accessibilityIdentifier = appearance.textInputAppearance.accessibilityIdentifier
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
         self.tabBarContentInsets = appearance.tabBarAppearance.contentInsets
         self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
-        self.sendButton.setTitle(appearance.sendButtonAppearance.title, for: .normal)
-        appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
-            self.sendButton.setTitleColor(color, for: state.controlState)
+        if let image = appearance.sendButtonAppearance.image {
+            self.sendButton.setBackgroundImage(image, for: .normal)
+        } else {
+            self.sendButton.setTitle(appearance.sendButtonAppearance.title, for: .normal)
         }
-        self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
+//        appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
+//            self.sendButton.setTitleColor(color, for: state.controlState)
+//        }
+//        self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
         self.sendButton.accessibilityIdentifier = appearance.sendButtonAppearance.accessibilityIdentifier
-        self.tabBarContainerHeightConstraint.constant = appearance.tabBarAppearance.height
+        self.tabBarContainerHeightConstraint.constant = 0
     }
 }
 

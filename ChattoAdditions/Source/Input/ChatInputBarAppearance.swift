@@ -29,6 +29,7 @@ public struct ChatInputBarAppearance {
         public var font = UIFont.systemFont(ofSize: 16)
         public var insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         public var title = ""
+        public var image: UIImage?
         public var titleColors: [UIControlStateWrapper: UIColor] = [
             UIControlStateWrapper(state: .disabled): UIColor.bma_color(rgb: 0x9AA3AB),
             UIControlStateWrapper(state: .normal): UIColor.bma_color(rgb: 0x007AFF),
@@ -52,6 +53,8 @@ public struct ChatInputBarAppearance {
         public var placeholderFont = UIFont.systemFont(ofSize: 12)
         public var placeholderColor = UIColor.gray
         public var placeholderText = ""
+        public var backgroundColor = UIColor.gray
+        public var cornerRadius: CGFloat?
         public var textInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
         public let accessibilityIdentifier = "chatto.inputbar.inputfield.text"
     }
