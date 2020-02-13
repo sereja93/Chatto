@@ -24,6 +24,7 @@
                 </textView>
                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hE9-hU-Ci1">
                     <rect key="frame" x="555" y="84" width="30" height="30"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="hE9-hU-Ci1" secondAttribute="height" multiplier="1:1" id="S6M-wP-Edc"/>
                         <constraint firstAttribute="height" constant="30" id="hce-Ui-b31"/>

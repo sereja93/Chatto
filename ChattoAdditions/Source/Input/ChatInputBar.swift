@@ -187,8 +187,12 @@ open class ChatInputBar: ReusableXibView {
             self.textView.placeholderText = newValue
         }
     }
+    
+    var enableColor: UIColor!
+    var disableColor: UIColor!
 
     fileprivate func updateSendButton() {
+        self.sendButton.tintColor = self.shouldEnableSendButton(self) ? enableColor : disableColor
         self.sendButton.isEnabled = self.shouldEnableSendButton(self)
     }
 
@@ -244,12 +248,18 @@ extension ChatInputBar {
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
         self.tabBarContentInsets = appearance.tabBarAppearance.contentInsets
         self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
+        self.enableColor = appearance.sendButtonAppearance.titleColors[UIControlStateWrapper(state: .normal)]!
+        self.disableColor = appearance.sendButtonAppearance.titleColors[UIControlStateWrapper(state: .disabled)]!
         if let image = appearance.sendButtonAppearance.image {
-            self.sendButton.setBackgroundImage(image, for: .normal)
-        } else {
-            self.sendButton.setTitle(appearance.sendButtonAppearance.title, for: .normal)
+            let img = image.withRenderingMode(.alwaysTemplate)
+            self.sendButton.setBackgroundImage(img, for: UIControl.State())
+            self.sendButton.tintColor = self.disableColor
+        } else if let image = self.sendButton.backgroundImage(for: UIControl.State()) {
+            let img = image.withRenderingMode(.alwaysTemplate)
+            self.sendButton.setBackgroundImage(img, for: UIControl.State())
+            self.sendButton.tintColor = self.disableColor
         }
-//        appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
+        //        appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
 //            self.sendButton.setTitleColor(color, for: state.controlState)
 //        }
 //        self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
