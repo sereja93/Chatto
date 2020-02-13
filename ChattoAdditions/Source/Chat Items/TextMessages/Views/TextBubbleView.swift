@@ -29,8 +29,11 @@ public protocol TextBubbleViewStyleProtocol {
     func bubbleImage(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage
     func bubbleImageBorder(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage?
     func textFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont
+    func dateFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont
     func textColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor
+    func dateColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor
     func textInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets
+    func dateInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets
 }
 
 public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
@@ -54,6 +57,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             self.updateViews()
         }
     }
+
 
     public var textMessageViewModel: TextMessageViewModelProtocol! {
         didSet {
@@ -160,6 +164,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         guard let style = self.style else { return }
 
         self.updateTextView()
+        self.updateDateTextView()
         let bubbleImage = style.bubbleImage(viewModel: self.textMessageViewModel, isSelected: self.selected)
         let borderImage = style.bubbleImageBorder(viewModel: self.textMessageViewModel, isSelected: self.selected)
         if self.bubbleImageView.image != bubbleImage { self.bubbleImageView.image = bubbleImage }
@@ -174,23 +179,11 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
 
         var needsToUpdateText = false
 
-        if self.dateTextView.font != font {
-            self.dateTextView.font = font
-        }
         
         if self.textView.font != font {
             self.textView.font = font
             needsToUpdateText = true
         }
-        
-        if self.dateTextView.textColor != textColor {
-            self.dateTextView.textColor = textColor
-            self.dateTextView.linkTextAttributes = [
-                NSAttributedString.Key.foregroundColor: textColor,
-                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
-            ]
-        }
-        
         
         if self.textView.textColor != textColor {
             self.textView.textColor = textColor
@@ -201,17 +194,40 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             needsToUpdateText = true
         }
         
-        
         if needsToUpdateText || self.textView.text != viewModel.text {
             self.textView.text = viewModel.text
         }
 
         let textInsets = style.textInsets(viewModel: viewModel, isSelected: self.selected)
         if self.textView.textContainerInset != textInsets { self.textView.textContainerInset = textInsets }
-        if self.dateTextView.textContainerInset != textInsets { self.dateTextView.textContainerInset = textInsets }
         
+    }
+    
+    private func updateDateTextView() {
+        guard let style = self.style, let viewModel = self.textMessageViewModel else { return }
+        
+        let font = style.dateFont(viewModel: viewModel, isSelected: self.selected)
+        let textColor = style.dateColor(viewModel: viewModel, isSelected: self.selected)
+        
+        if self.dateTextView.font != font {
+            self.dateTextView.font = font
+        }
+        
+        
+        if self.dateTextView.textColor != textColor {
+            self.dateTextView.textColor = textColor
+            self.dateTextView.linkTextAttributes = [
+                NSAttributedString.Key.foregroundColor: textColor,
+                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+            ]
+        }
+        
+        let textInsets = style.dateInsets(viewModel: viewModel, isSelected: self.selected)
+        if self.dateTextView.textContainerInset != textInsets { self.dateTextView.textContainerInset = textInsets }
         self.dateTextView.text = viewModel.date
     }
+    
+    
 
     private func bubbleImage() -> UIImage {
         return self.style.bubbleImage(viewModel: self.textMessageViewModel, isSelected: self.selected)

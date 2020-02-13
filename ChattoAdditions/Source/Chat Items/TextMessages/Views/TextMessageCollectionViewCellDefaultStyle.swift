@@ -26,6 +26,7 @@ import UIKit
 import Chatto
 
 open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewCellStyleProtocol {
+    
     typealias Class = TextMessageCollectionViewCellDefaultStyle
 
     public struct BubbleImages {
@@ -71,10 +72,11 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     public init (
         bubbleImages: BubbleImages = TextMessageCollectionViewCellDefaultStyle.createDefaultBubbleImages(),
         textStyle: TextStyle = TextMessageCollectionViewCellDefaultStyle.createDefaultTextStyle(),
+        dateStyle: TextStyle = TextMessageCollectionViewCellDefaultStyle.createDefaultDateStyle(),
         baseStyle: BaseMessageCollectionViewCellDefaultStyle = BaseMessageCollectionViewCellDefaultStyle()) {
-            self.bubbleImages = bubbleImages
-            self.textStyle = textStyle
-            self.baseStyle = baseStyle
+        self.bubbleImages = bubbleImages
+        self.textStyle = textStyle
+        self.baseStyle = baseStyle
     }
 
     lazy private var images: [ImageKey: UIImage] = {
@@ -89,6 +91,12 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     lazy var font: UIFont = self.textStyle.font()
     lazy var incomingColor: UIColor = self.textStyle.incomingColor()
     lazy var outgoingColor: UIColor = self.textStyle.outgoingColor()
+    
+    let dateStyle = createDefaultDateStyle()
+    
+    lazy var dateFont: UIFont = self.dateStyle.font()
+    lazy var dateIncomingColor: UIColor = self.dateStyle.incomingColor()
+    lazy var dateOutgoingColor: UIColor = self.dateStyle.outgoingColor()
 
     open func textFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont {
         return self.font
@@ -97,9 +105,21 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     open func textColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor {
         return viewModel.isIncoming ? self.incomingColor : self.outgoingColor
     }
+    
+    open func dateColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor {
+        return viewModel.isIncoming ? self.dateIncomingColor : self.dateOutgoingColor
+    }
+    
+    open func dateFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont {
+        return self.dateFont
+    }
 
     open func textInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets {
         return viewModel.isIncoming ? self.textStyle.incomingInsets : self.textStyle.outgoingInsets
+    }
+    
+    open func dateInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets {
+        return viewModel.isIncoming ? self.dateStyle.incomingInsets : self.dateStyle.outgoingInsets
     }
 
     open func bubbleImageBorder(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage? {
@@ -166,5 +186,32 @@ public extension TextMessageCollectionViewCellDefaultStyle { // Default values
             incomingInsets: UIEdgeInsets(top: 10, left: 19, bottom: 10, right: 15),
             outgoingInsets: UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 19)
         )
+    }
+    
+    static func createDefaultDateStyle() -> TextStyle {
+        return TextStyle(
+            font: UIFont.systemFont(ofSize: 10, weight: .regular),
+            incomingColor: UIColor.hexStr("77767E"),
+            outgoingColor: UIColor.white,
+            incomingInsets: UIEdgeInsets(top: 10, left: 19, bottom: 10, right: 15),
+            outgoingInsets: UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 19)
+        )
+    }
+}
+
+
+extension UIColor {
+    class func hexStr(_ str: String, alpha: CGFloat = 1) -> UIColor {
+        let hexStr = str.replacingOccurrences(of: "#", with: "")
+        let scanner = Scanner(string: hexStr)
+        var color: UInt32 = 0
+        if scanner.scanHexInt32(&color) {
+            let r = CGFloat((color & 0xFF0000) >> 16) / 255.0
+            let g = CGFloat((color & 0x00FF00) >> 8) / 255.0
+            let b = CGFloat(color & 0x0000FF) / 255.0
+            return UIColor(red: r, green: g, blue: b , alpha: alpha)
+        } else {
+            fatalError("Unable parse color \(str)")
+        }
     }
 }

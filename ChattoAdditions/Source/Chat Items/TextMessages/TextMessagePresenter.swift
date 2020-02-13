@@ -57,6 +57,7 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private let menuPresenter: TextMessageMenuItemPresenterProtocol?
     let layoutCache: NSCache<AnyObject, AnyObject>
     let textCellStyle: TextMessageCollectionViewCellStyleProtocol
+    
 
     public final override class func registerCells(_ collectionView: UICollectionView) {
         collectionView.register(TextMessageCollectionViewCell.self, forCellWithReuseIdentifier: "text-message-incoming")
