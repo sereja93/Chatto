@@ -110,8 +110,8 @@ class DemoChatViewController: BaseChatViewController {
         
         
         let baseMessageStyle: BaseMessageCollectionViewCellDefaultStyle = BaseMessageCollectionViewCellDefaultStyle(
-            colors: BaseMessageCollectionViewCellDefaultStyle.Colors(incoming: UIColor.orange, outgoing: UIColor.blue)
-//            bubbleBorderImages: nil
+            colors: BaseMessageCollectionViewCellDefaultStyle.Colors(incoming:  nil, outgoing: UIColor.blue),
+            bubbleBorderImages: nil
         )
         
         let textCellStyle: TextMessageCollectionViewCellDefaultStyle = TextMessageCollectionViewCellDefaultStyle(

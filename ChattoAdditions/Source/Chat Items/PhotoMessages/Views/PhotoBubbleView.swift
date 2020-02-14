@@ -27,7 +27,7 @@ import UIKit
 public protocol PhotoBubbleViewStyleProtocol {
     func maskingImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage
     func borderImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage?
-    func placeholderBackgroundImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage
+    func placeholderBackgroundImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage?
     func placeholderIconImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage
     func placeholderIconTintColor(viewModel: PhotoMessageViewModelProtocol) -> UIColor
     func tailWidth(viewModel: PhotoMessageViewModelProtocol) -> CGFloat

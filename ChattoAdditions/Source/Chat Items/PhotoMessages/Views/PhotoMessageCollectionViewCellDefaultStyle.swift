@@ -133,7 +133,7 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
         return self.baseStyle.borderImage(viewModel: viewModel)
     }
 
-    open func placeholderBackgroundImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage {
+    open func placeholderBackgroundImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage? {
         return viewModel.isIncoming ? self.placeholderBackgroundIncoming : self.placeholderBackgroundOutgoing
     }
 

@@ -32,8 +32,8 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         let incoming: () -> UIColor?
         let outgoing: () -> UIColor?
         public init(
-            incoming: @autoclosure @escaping () -> UIColor,
-            outgoing: @autoclosure @escaping () -> UIColor) {
+            incoming: @autoclosure @escaping () -> UIColor?,
+            outgoing: @autoclosure @escaping () -> UIColor?) {
                 self.incoming = incoming
                 self.outgoing = outgoing
         }

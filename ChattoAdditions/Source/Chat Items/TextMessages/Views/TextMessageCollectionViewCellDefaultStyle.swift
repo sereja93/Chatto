@@ -191,11 +191,11 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
         case .success:
             break
         case .failed, .sending:
-            color = color.bma_blendWithColor(UIColor.white.withAlphaComponent(0.70))
+            color = color?.bma_blendWithColor(UIColor.white.withAlphaComponent(0.70))
         }
 
         if isSelected {
-            color = color.bma_blendWithColor(UIColor.black.withAlphaComponent(0.10))
+            color = color?.bma_blendWithColor(UIColor.black.withAlphaComponent(0.10))
         }
 
         return image.bma_tintWithColor(color)
