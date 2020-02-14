@@ -55,7 +55,6 @@ class DemoChatViewController: BaseChatViewController {
     override func createChatInputView() -> UIView {
         let chatInputView = ChatInputBar.loadNib()
         var appearance = ChatInputBarAppearance()
-        appearance.sendButtonAppearance.title = NSLocalizedString("Send", comment: "")
         appearance.sendButtonAppearance.image = UIImage(named: "send")
         appearance.sendButtonAppearance.titleColors = [
             UIControlStateWrapper(state: .disabled): .yellow,
@@ -88,7 +87,44 @@ class DemoChatViewController: BaseChatViewController {
             viewModelBuilder: DemoTextMessageViewModelBuilder(),
             interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
         )
-        textMessagePresenter.baseMessageStyle = BaseMessageCollectionViewCellAvatarStyle()
+        
+        let textStyle = TextMessageCollectionViewCellDefaultStyle.TextStyle(
+            font: UIFont.systemFont(ofSize: 14, weight: .light),
+            incomingColor: UIColor.yellow,
+            outgoingColor: UIColor.green,
+            incomingInsets: UIEdgeInsets(top: 10, left: 19, bottom: 10, right: 19),
+            outgoingInsets: UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
+            
+        )
+        
+        let dateStyle = TextMessageCollectionViewCellDefaultStyle.DateStyle(
+            font: UIFont.systemFont(ofSize: 14, weight: .light),
+            incomingColor: UIColor.cyan,
+            outgoingColor: UIColor.brown,
+            incomingInsets: UIEdgeInsets(top: 10, left: 19, bottom: 10, right: 19),
+            outgoingInsets: UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15),
+            incomingBottomPadding: 20,
+            outcomingBottomgPadding: 10,
+            height: 15
+        )
+        
+        
+        let baseMessageStyle: BaseMessageCollectionViewCellDefaultStyle = BaseMessageCollectionViewCellDefaultStyle(
+            colors: BaseMessageCollectionViewCellDefaultStyle.Colors(incoming: UIColor.orange, outgoing: UIColor.blue)
+//            bubbleBorderImages: nil
+        )
+        
+        let textCellStyle: TextMessageCollectionViewCellDefaultStyle = TextMessageCollectionViewCellDefaultStyle(
+            textStyle: textStyle,
+            dateStyle: dateStyle,
+            baseStyle: baseMessageStyle)
+        
+        
+        
+        
+        
+        textMessagePresenter.baseMessageStyle = baseMessageStyle
+        textMessagePresenter.textCellStyle = textCellStyle
 
         let photoMessagePresenter = PhotoMessagePresenterBuilder(
             viewModelBuilder: DemoPhotoMessageViewModelBuilder(),

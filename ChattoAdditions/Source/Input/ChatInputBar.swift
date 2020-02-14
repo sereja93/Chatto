@@ -64,8 +64,8 @@ open class ChatInputBar: ReusableXibView {
     @IBOutlet var constraintsForHiddenTextView: [NSLayoutConstraint]!
     @IBOutlet var constraintsForVisibleTextView: [NSLayoutConstraint]!
 
-//    @IBOutlet var constraintsForVisibleSendButton: [NSLayoutConstraint]!
-//    @IBOutlet var constraintsForHiddenSendButton: [NSLayoutConstraint]!
+    @IBOutlet weak var bottomPaddingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var btnHeightConstraint: NSLayoutConstraint!
     @IBOutlet var tabBarContainerHeightConstraint: NSLayoutConstraint!
 
     class open func loadNib() -> ChatInputBar {
@@ -97,13 +97,6 @@ open class ChatInputBar: ReusableXibView {
             NSLayoutConstraint.deactivate(self.constraintsForVisibleTextView)
             NSLayoutConstraint.activate(self.constraintsForHiddenTextView)
         }
-//        if self.showsSendButton {
-//            NSLayoutConstraint.deactivate(self.constraintsForHiddenSendButton)
-//            NSLayoutConstraint.activate(self.constraintsForVisibleSendButton)
-//        } else {
-//            NSLayoutConstraint.deactivate(self.constraintsForVisibleSendButton)
-//            NSLayoutConstraint.activate(self.constraintsForHiddenSendButton)
-//        }
         super.updateConstraints()
     }
 
@@ -259,10 +252,15 @@ extension ChatInputBar {
             self.sendButton.setBackgroundImage(img, for: UIControl.State())
             self.sendButton.tintColor = self.disableColor
         }
-        //        appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
-//            self.sendButton.setTitleColor(color, for: state.controlState)
-//        }
-//        self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
+        
+        if let bottomPadding = appearance.sendButtonAppearance.bottomPadding {
+            self.bottomPaddingConstraint.constant = bottomPadding
+        }
+        
+        if let bottomHeight = appearance.sendButtonAppearance.frameSize {
+            self.btnHeightConstraint.constant = bottomHeight.height
+        }
+        
         self.sendButton.accessibilityIdentifier = appearance.sendButtonAppearance.accessibilityIdentifier
         self.tabBarContainerHeightConstraint.constant = 0
     }

@@ -27,6 +27,7 @@ import Chatto
 
 open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewCellStyleProtocol {
     
+    
     typealias Class = TextMessageCollectionViewCellDefaultStyle
 
     public struct BubbleImages {
@@ -65,18 +66,50 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
                 self.outgoingInsets = outgoingInsets
         }
     }
+    
+    public struct DateStyle {
+        public let font: () -> UIFont
+        public let incomingColor: () -> UIColor
+        public let outgoingColor: () -> UIColor
+        public let incomingInsets: UIEdgeInsets
+        public let outgoingInsets: UIEdgeInsets
+        public let incomingBottomPadding: CGFloat
+        public let outcomingBottomgPadding: CGFloat
+        public let height: CGFloat
+        public init(
+            font: @autoclosure @escaping () -> UIFont,
+            incomingColor: @autoclosure @escaping () -> UIColor,
+            outgoingColor: @autoclosure @escaping () -> UIColor,
+            incomingInsets: UIEdgeInsets,
+            outgoingInsets: UIEdgeInsets,
+            incomingBottomPadding: CGFloat,
+            outcomingBottomgPadding: CGFloat,
+            height: CGFloat
+        ) {
+            self.font = font
+            self.incomingColor = incomingColor
+            self.outgoingColor = outgoingColor
+            self.incomingInsets = incomingInsets
+            self.outgoingInsets = outgoingInsets
+            self.incomingBottomPadding = incomingBottomPadding
+            self.outcomingBottomgPadding = outcomingBottomgPadding
+            self.height = height
+        }
+    }
 
     public let bubbleImages: BubbleImages
     public let textStyle: TextStyle
+    public let dateStyle: DateStyle
     public let baseStyle: BaseMessageCollectionViewCellDefaultStyle
     public init (
         bubbleImages: BubbleImages = TextMessageCollectionViewCellDefaultStyle.createDefaultBubbleImages(),
         textStyle: TextStyle = TextMessageCollectionViewCellDefaultStyle.createDefaultTextStyle(),
-        dateStyle: TextStyle = TextMessageCollectionViewCellDefaultStyle.createDefaultDateStyle(),
+        dateStyle: DateStyle = TextMessageCollectionViewCellDefaultStyle.createDefaultDateStyle(),
         baseStyle: BaseMessageCollectionViewCellDefaultStyle = BaseMessageCollectionViewCellDefaultStyle()) {
         self.bubbleImages = bubbleImages
         self.textStyle = textStyle
         self.baseStyle = baseStyle
+        self.dateStyle = dateStyle
     }
 
     lazy private var images: [ImageKey: UIImage] = {
@@ -92,7 +125,6 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     lazy var incomingColor: UIColor = self.textStyle.incomingColor()
     lazy var outgoingColor: UIColor = self.textStyle.outgoingColor()
     
-    let dateStyle = createDefaultDateStyle()
     
     lazy var dateFont: UIFont = self.dateStyle.font()
     lazy var dateIncomingColor: UIColor = self.dateStyle.incomingColor()
@@ -120,6 +152,14 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     
     open func dateInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets {
         return viewModel.isIncoming ? self.dateStyle.incomingInsets : self.dateStyle.outgoingInsets
+    }
+    
+    open func dateBottomPadding(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> CGFloat {
+        return viewModel.isIncoming ? self.dateStyle.incomingBottomPadding : self.dateStyle.outcomingBottomgPadding
+    }
+    
+    open func dateHeight(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> CGFloat {
+        return self.dateStyle.height
     }
 
     open func bubbleImageBorder(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage? {
@@ -171,9 +211,9 @@ public extension TextMessageCollectionViewCellDefaultStyle { // Default values
 
     static func createDefaultBubbleImages() -> BubbleImages {
         return BubbleImages(
-            incomingTail: UIImage(named: "bubble-incoming-tail", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            incomingTail: UIImage(named: "bubble-incoming", in: Bundle(for: Class.self), compatibleWith: nil)!,
             incomingNoTail: UIImage(named: "bubble-incoming", in: Bundle(for: Class.self), compatibleWith: nil)!,
-            outgoingTail: UIImage(named: "bubble-outgoing-tail", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            outgoingTail: UIImage(named: "bubble-outgoing", in: Bundle(for: Class.self), compatibleWith: nil)!,
             outgoingNoTail: UIImage(named: "bubble-outgoing", in: Bundle(for: Class.self), compatibleWith: nil)!
         )
     }
@@ -188,13 +228,16 @@ public extension TextMessageCollectionViewCellDefaultStyle { // Default values
         )
     }
     
-    static func createDefaultDateStyle() -> TextStyle {
-        return TextStyle(
+    static func createDefaultDateStyle() -> DateStyle {
+        return DateStyle(
             font: UIFont.systemFont(ofSize: 10, weight: .regular),
             incomingColor: UIColor.hexStr("77767E"),
             outgoingColor: UIColor.white,
             incomingInsets: UIEdgeInsets(top: 10, left: 19, bottom: 10, right: 15),
-            outgoingInsets: UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 19)
+            outgoingInsets: UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 19),
+            incomingBottomPadding: 10,
+            outcomingBottomgPadding: 10,
+            height: 15
         )
     }
 }

@@ -26,10 +26,10 @@ import UIKit
 
 public struct ChatInputBarAppearance {
     public struct SendButtonAppearance {
-        public var font = UIFont.systemFont(ofSize: 16)
         public var insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        public var title = ""
         public var image: UIImage?
+        public var bottomPadding: CGFloat?
+        public var frameSize: CGSize?
         public var titleColors: [UIControlStateWrapper: UIColor] = [
             UIControlStateWrapper(state: .disabled): UIColor.bma_color(rgb: 0x9AA3AB),
             UIControlStateWrapper(state: .normal): UIColor.bma_color(rgb: 0x007AFF),

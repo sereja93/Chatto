@@ -104,7 +104,7 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
     lazy private var maskImageOutgoingTail: UIImage = self.bubbleMasks.outgoingTail()
     lazy private var maskImageOutgoingNoTail: UIImage = self.bubbleMasks.outgoingNoTail()
 
-    lazy private var placeholderBackgroundIncoming: UIImage = {
+    lazy private var placeholderBackgroundIncoming: UIImage? = {
         return UIImage.bma_imageWithColor(self.baseStyle.baseColorIncoming, size: CGSize(width: 1, height: 1))
     }()
 

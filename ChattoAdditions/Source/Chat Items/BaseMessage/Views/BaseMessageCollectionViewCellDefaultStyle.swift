@@ -29,8 +29,8 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     typealias Class = BaseMessageCollectionViewCellDefaultStyle
 
     public struct Colors {
-        let incoming: () -> UIColor
-        let outgoing: () -> UIColor
+        let incoming: () -> UIColor?
+        let outgoing: () -> UIColor?
         public init(
             incoming: @autoclosure @escaping () -> UIColor,
             outgoing: @autoclosure @escaping () -> UIColor) {
@@ -130,8 +130,8 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
             ]
     }
 
-    public lazy var baseColorIncoming: UIColor = self.colors.incoming()
-    public lazy var baseColorOutgoing: UIColor = self.colors.outgoing()
+    public lazy var baseColorIncoming: UIColor? = self.colors.incoming()
+    public lazy var baseColorOutgoing: UIColor? = self.colors.outgoing()
 
     public lazy var borderIncomingTail: UIImage? = self.bubbleBorderImages?.borderIncomingTail()
     public lazy var borderIncomingNoTail: UIImage? = self.bubbleBorderImages?.borderIncomingNoTail()

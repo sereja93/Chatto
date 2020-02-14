@@ -34,6 +34,8 @@ public protocol TextBubbleViewStyleProtocol {
     func dateColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor
     func textInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets
     func dateInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets
+    func dateBottomPadding(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> CGFloat
+    func dateHeight(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> CGFloat
 }
 
 public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
@@ -237,7 +239,6 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         return self.calculateTextBubbleLayout(preferredMaxLayoutWidth: size.width).size
     }
 
-    // MARK: Layout
     public override func layoutSubviews() {
         super.layoutSubviews()
         let layout = self.calculateTextBubbleLayout(preferredMaxLayoutWidth: self.preferredMaxLayoutWidth)
@@ -261,7 +262,9 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             return layoutModel
         }
 
-        let layoutModel = TextBubbleLayoutModel(layoutContext: layoutContext)
+        let datePadding = style.dateBottomPadding(viewModel: self.textMessageViewModel, isSelected: self.selected)
+        let dateHeight = style.dateHeight(viewModel: self.textMessageViewModel, isSelected: self.selected)
+        let layoutModel = TextBubbleLayoutModel(layoutContext: layoutContext, datePadding: datePadding, dateHeight: dateHeight)
         layoutModel.calculateLayout()
 
         self.layoutCache.setObject(layoutModel, forKey: layoutContext.hashValue as AnyObject)
@@ -279,9 +282,13 @@ private final class TextBubbleLayoutModel {
     var dateFrame: CGRect = .zero
     var bubbleFrame: CGRect = CGRect.zero
     var size: CGSize = CGSize.zero
+    let datePadding: CGFloat
+    let dateHeight: CGFloat
 
-    init(layoutContext: LayoutContext) {
+    init(layoutContext: LayoutContext, datePadding: CGFloat, dateHeight: CGFloat) {
         self.layoutContext = layoutContext
+        self.datePadding = datePadding
+        self.dateHeight = dateHeight
     }
 
     struct LayoutContext: Equatable, Hashable {
@@ -292,17 +299,18 @@ private final class TextBubbleLayoutModel {
         let preferredMaxLayoutWidth: CGFloat
     }
 
-    private var dateHeight: CGFloat = 20
+    
+    
     func calculateLayout() {
         let textHorizontalInset = self.layoutContext.textInsets.bma_horziontalInset
         let maxTextWidth = self.layoutContext.preferredMaxLayoutWidth - textHorizontalInset
         let textSize = self.textSizeThatFitsWidth(maxTextWidth)
         let messageSize = textSize.bma_outsetBy(dx: textHorizontalInset, dy: self.layoutContext.textInsets.bma_verticalInset)
         var bubbleSize = messageSize
-        bubbleSize.height += CGFloat(dateHeight / 2)
+        bubbleSize.height += dateHeight + datePadding
         self.bubbleFrame = CGRect(origin: CGPoint.zero, size: bubbleSize)
         self.textFrame = CGRect(origin: CGPoint.zero, size: messageSize)
-        self.dateFrame = CGRect(origin: CGPoint(x: 0, y: messageSize.height - dateHeight), size: CGSize(width: messageSize.width, height: dateHeight + 10))
+        self.dateFrame = CGRect(origin: CGPoint(x: 0, y: messageSize.height - dateHeight), size: CGSize(width: messageSize.width, height: self.dateHeight + self.datePadding))
         self.size = bubbleSize
     }
 

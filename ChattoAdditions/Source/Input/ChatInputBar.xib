@@ -92,6 +92,8 @@
                 </mask>
             </variation>
             <connections>
+                <outlet property="bottomPaddingConstraint" destination="Cxl-EA-uT7" id="GaA-EG-yaP"/>
+                <outlet property="btnHeightConstraint" destination="hce-Ui-b31" id="RuI-bZ-wlf"/>
                 <outlet property="scrollView" destination="WNX-pj-5AB" id="Qqy-Ny-mng"/>
                 <outlet property="sendButton" destination="hE9-hU-Ci1" id="VFQ-Pb-J37"/>
                 <outlet property="tabBarContainerHeightConstraint" destination="vwa-F7-EIB" id="d3G-fs-hEH"/>
